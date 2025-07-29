@@ -368,6 +368,80 @@ html {
     body {
         background-image: url('../images/fondo-movil.png'); /* Imagen para móvil */
     }
+    /* Reducir espacio vertical en header y notificaciones */
+    .main-header {
+        padding: 0 !important;
+        min-height: unset !important;
+    }
+    .header-content {
+        gap: 0.1rem !important;
+        padding: 0.2rem 0 0.1rem 0 !important;
+        min-height: unset !important;
+    }
+    .notification-bell {
+        margin-bottom: 0 !important;
+        padding: 0 !important;
+    }
+    .notifications-dropdown {
+        margin-top: 0 !important;
+    }
+    .notification-bell {
+        margin: 0 !important;
+        padding: 0 !important;
+        min-width: 32px;
+        min-height: 32px;
+        height: 32px;
+        width: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .bell-icon {
+        width: 22px !important;
+        height: 22px !important;
+        min-width: 22px !important;
+        min-height: 22px !important;
+    }
+    .notification-count {
+        top: 0 !important;
+        right: 0 !important;
+        font-size: 0.65rem !important;
+        padding: 1px 4px !important;
+    }
+    /* Ajuste modal de notificaciones en responsive */
+    .notifications-dropdown {
+        position: fixed !important;
+        left: 50% !important;
+        top: 1.2rem !important;
+        transform: translateX(-50%) !important;
+        width: 92vw !important;
+        max-width: 370px !important;
+        min-width: 0 !important;
+        border-radius: 18px !important;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.18), 0 1.5px 6px rgba(0,0,0,0.10) !important;
+        background: rgba(255,255,255,0.98) !important;
+        padding: 0.5rem 0.5rem 0.7rem 0.5rem !important;
+        margin: 0 !important;
+        z-index: 2000 !important;
+        height: auto !important;
+        border: 1.5px solid var(--gray-medium) !important;
+        backdrop-filter: blur(2px);
+    }
+    .notifications-dropdown.open {
+        max-height: 70vh !important;
+        overflow-y: auto !important;
+    }
+    .notification-item {
+        background: var(--white);
+        border-radius: 10px;
+        margin-bottom: 0.3rem;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    }
+    .notification-item {
+        border-radius: 6px;
+        margin-bottom: 0.2rem;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    }
 }
 
 
@@ -1864,20 +1938,49 @@ html {
 @media (max-width: 768px) {
     .notification-bell {
         margin-right: 0;
-        margin-bottom: var(--spacing-md);
+        margin-bottom: 0;
+        padding: 0;
     }
 
     .notifications-dropdown {
         position: static;
-        width: 100%;
+        width: 100vw;
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
         box-shadow: none;
         border-radius: 0;
-        padding: 0;
+        padding: 0.25rem 0.5rem;
         border-top: 1px solid var(--gray-medium);
+        min-width: unset;
+        max-width: 100vw;
+        margin: 0;
     }
 
     .notifications-dropdown.open {
         height: auto;
+    }
+
+    .notification-item {
+        padding: 0.5rem 0.25rem;
+        font-size: var(--font-size-xs);
+        gap: 0.25rem;
+    }
+
+    .notification-content strong {
+        font-size: var(--font-size-sm);
+    }
+
+    .notification-actions .btn {
+        font-size: 0.7rem;
+        padding: 0.1rem 0.3rem;
+    }
+
+    .notification-count {
+        top: 0;
+        right: 0;
+        font-size: 0.7rem;
+        padding: 1px 4px;
     }
 }
 
