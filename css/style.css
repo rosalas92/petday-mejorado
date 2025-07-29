@@ -74,6 +74,15 @@ body {
     background-attachment: fixed; /* Para que la imagen de fondo no se desplace con el scroll */
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
+/* Desplazamiento para anclas, para compensar el header fijo */
+[id] {
+    scroll-margin-top: 130px;
+}
+
 /* Container */
 .container {
     max-width: 1400px;
