@@ -15,7 +15,7 @@ if (!isset($_SESSION['user_id'])) {
 $userId = $_SESSION['user_id'];
 
 try {
-    $pdo = getDbConnection();
+    $pdo = getConnection();
 
     // Marcar todas las notificaciones no leídas del usuario como leídas
     $stmt = $pdo->prepare("UPDATE notificaciones SET leida = 1 WHERE id_usuario = :user_id AND leida = 0");

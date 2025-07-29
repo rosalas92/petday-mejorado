@@ -22,7 +22,7 @@ if (!$notificationId) {
 }
 
 try {
-    $pdo = getDbConnection();
+    $pdo = getConnection();
 
     // Marcar la notificación como leída, asegurándose de que pertenezca al usuario actual
     $stmt = $pdo->prepare("UPDATE notificaciones SET leida = 1 WHERE id_notificacion = :notification_id AND id_usuario = :user_id");

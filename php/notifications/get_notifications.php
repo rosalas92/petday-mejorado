@@ -16,7 +16,7 @@ if (!isset($_SESSION['user_id'])) {
 $userId = $_SESSION['user_id'];
 
 try {
-    $pdo = getDbConnection();
+    $pdo = getConnection();
 
     // Obtener notificaciones para el usuario, ordenadas por fecha descendente
     $stmt = $pdo->prepare("SELECT id_notificacion, titulo, mensaje, leida, fecha_creacion FROM notificaciones WHERE id_usuario = :user_id ORDER BY fecha_creacion DESC LIMIT 10");

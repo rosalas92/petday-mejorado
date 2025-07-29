@@ -1,0 +1,129 @@
+# Esquema Básico de la Base de Datos PetDay
+
+Este es un esquema inferido de las tablas principales y sus relaciones, basado en el código PHP existente.
+
+---
+
+## Tabla: `usuarios`
+- `id_usuario` (PK)
+- `nombre_completo`
+- `email` (UNIQUE)
+- `password_hash`
+- `telefono` (NULLABLE)
+- `rol` (e.g., 'usuario', 'admin')
+- `activo` (BOOLEAN, DEFAULT 1)
+- `reset_token` (NULLABLE)
+- `reset_token_expires_at` (DATETIME, NULLABLE)
+
+---
+
+## Tabla: `mascotas`
+- `id_mascota` (PK)
+- `id_usuario` (FK a `usuarios.id_usuario`)
+- `nombre`
+- `especie`
+- `raza` (NULLABLE)
+- `edad` (INTEGER, NULLABLE)
+- `peso` (DECIMAL, NULLABLE)
+- `genero` (e.g., 'macho', 'hembra')
+- `foto` (VARCHAR, NULLABLE, nombre del archivo)
+- `historial_medico` (TEXT, NULLABLE, posiblemente obsoleto o para notas generales)
+- `fecha_creacion` (DATETIME, DEFAULT CURRENT_TIMESTAMP)
+
+---
+
+## Tabla: `rutinas`
+- `id_rutina` (PK)
+- `id_mascota` (FK a `mascotas.id_mascota`)
+- `tipo_actividad` (e.g., 'comida', 'paseo', 'juego', 'medicacion', 'higiene', 'entrenamiento')
+- `nombre_actividad`
+- `descripcion` (TEXT, NULLABLE)
+- `hora_programada` (TIME)
+- `dias_semana` (VARCHAR, e.g., 'lunes,martes,viernes')
+- `activa` (BOOLEAN, DEFAULT 1)
+
+---
+
+## Tabla: `seguimiento_actividades`
+- `id_seguimiento` (PK)
+- `id_rutina` (FK a `rutinas.id_rutina`)
+- `fecha_realizada` (DATE)
+- `hora_realizada` (TIME)
+- `completada` (BOOLEAN, DEFAULT 0)
+
+---
+
+## Tabla: `eventos`
+- `id_evento` (PK)
+- `id_mascota` (FK a `mascotas.id_mascota`)
+- `tipo_evento` (e.g., 'vacuna', 'veterinario', 'baño', 'corte_uñas', 'desparasitacion', 'revision', 'otro')
+- `titulo`
+- `descripcion` (TEXT, NULLABLE)
+- `fecha_evento` (DATETIME)
+- `completado` (BOOLEAN, DEFAULT 0)
+
+---
+
+## Tabla: `historial_medico`
+- `id_historial` (PK)
+- `id_mascota` (FK a `mascotas.id_mascota`)
+- `tipo_registro` (e.g., 'vacuna', 'enfermedad', 'tratamiento', 'cirugia', 'revision', 'medicacion', 'alergia', 'otro')
+- `fecha_registro` (DATE)
+- `titulo`
+- `descripcion` (TEXT, NULLABLE)
+- `veterinario` (VARCHAR, NULLABLE)
+- `clinica` (VARCHAR, NULLABLE)
+- `medicamentos` (TEXT, NULLABLE)
+- `dosis` (VARCHAR, NULLABLE)
+- `observaciones` (TEXT, NULLABLE)
+- `archivo_adjunto` (VARCHAR, NULLABLE, nombre del archivo)
+
+---
+
+## Tabla: `contactos_veterinarios`
+- `id_contacto` (PK)
+- `id_usuario` (FK a `usuarios.id_usuario`)
+- `nombre`
+- `clinica` (NULLABLE)
+- `telefono` (NULLABLE)
+- `email` (NULLABLE)
+- `direccion` (NULLABLE)
+- `especialidad` (NULLABLE)
+- `notas` (TEXT, NULLABLE)
+- `es_principal` (BOOLEAN, DEFAULT 0)
+- `activo` (BOOLEAN, DEFAULT 1)
+
+---
+
+## Tabla: `notificaciones`
+- `id_notificacion` (PK)
+- `id_usuario` (FK a `usuarios.id_usuario`)
+- `tipo` (e.g., 'rutina', 'evento', 'recordatorio')
+- `titulo`
+- `mensaje`
+- `fecha_envio` (DATETIME, DEFAULT CURRENT_TIMESTAMP)
+- `leida` (BOOLEAN, DEFAULT 0)
+
+---
+
+## Tabla: `medidas_mascota`
+- `id_medida` (PK)
+- `id_mascota` (FK a `mascotas.id_mascota`)
+- `peso` (DECIMAL, NULLABLE)
+- `altura` (DECIMAL, NULLABLE)
+- `longitud` (DECIMAL, NULLABLE)
+- `circunferencia_cuello` (DECIMAL, NULLABLE)
+- `fecha_medicion` (DATE)
+- `notas` (TEXT, NULLABLE)
+
+---
+
+## Tabla: `cartilla_sanitaria`
+- `id_cartilla` (PK)
+- `id_mascota` (FK a `mascotas.id_mascota`)
+- `nombre_documento`
+- `fecha_documento` (DATE)
+- `archivo_path` (VARCHAR, nombre del archivo)
+- `tipo_archivo` (VARCHAR, e.g., 'pdf', 'jpeg')
+
+---

@@ -22,7 +22,7 @@ if (!$notificationId) {
 }
 
 try {
-    $pdo = getDbConnection();
+    $pdo = getConnection();
 
     // Eliminar la notificación, asegurándose de que pertenezca al usuario actual
     $stmt = $pdo->prepare("DELETE FROM notificaciones WHERE id_notificacion = :notification_id AND id_usuario = :user_id");
