@@ -19,7 +19,7 @@ try {
     $pdo = getConnection();
 
     // Obtener notificaciones para el usuario, ordenadas por fecha descendente
-    $stmt = $pdo->prepare("SELECT id_notificacion, titulo, mensaje, leida, fecha_creacion FROM notificaciones WHERE id_usuario = :user_id ORDER BY fecha_creacion DESC LIMIT 10");
+    $stmt = $pdo->prepare("SELECT id_notificacion, titulo, mensaje, leida, fecha_envio FROM notificaciones WHERE id_usuario = :user_id ORDER BY fecha_envio DESC LIMIT 10");
     $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
     $stmt->execute();
     $notifications = $stmt->fetchAll(PDO::FETCH_ASSOC);
