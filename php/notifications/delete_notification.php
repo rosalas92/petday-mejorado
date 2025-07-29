@@ -1,39 +1,47 @@
 <?php
 session_start();
-require_once '../../config/database_config.php';
+require_once __DIR__ . '/../../config/database_config.php';
+
+header('Content-Type: application/json');
+
+$response = ['success' => false, 'message' => ''];
 
 if (!isset($_SESSION['user_id'])) {
-    http_response_code(403);
-    echo json_encode(['message' => 'No autorizado']);
+    $response['message'] = 'Usuario no autenticado.';
+    echo json_encode($response);
     exit;
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $data = json_decode(file_get_contents('php://input'), true);
-    $notificationId = $data['id'];
+$userId = $_SESSION['user_id'];
+$notificationId = filter_input(INPUT_POST, 'notification_id', FILTER_VALIDATE_INT);
 
-    $sql = "DELETE FROM notificaciones WHERE id_notificacion = ? AND id_usuario = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ii", $notificationId, $_SESSION['user_id']);
-
-    if (empty($notificationId)) {
-        http_response_code(400);
-        echo json_encode(['message' => 'ID de notificación no proporcionado.']);
-        exit;
-    }
-
-    $sql = "DELETE FROM notificaciones WHERE id = ? AND user_id = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ii", $notificationId, $_SESSION['user_id']);
-
-    if ($stmt->execute()) {
-        echo json_encode(['message' => 'Notificación eliminada.']);
-    } else {
-        http_response_code(500);
-        echo json_encode(['message' => 'Error al eliminar la notificación.']);
-    }
-
-    $stmt->close();
-    $conn->close();
+if (!$notificationId) {
+    $response['message'] = 'ID de notificación inválido.';
+    echo json_encode($response);
+    exit;
 }
+
+try {
+    $pdo = getDbConnection();
+
+    // Eliminar la notificación, asegurándose de que pertenezca al usuario actual
+    $stmt = $pdo->prepare("DELETE FROM notificaciones WHERE id_notificacion = :notification_id AND id_usuario = :user_id");
+    $stmt->bindParam(':notification_id', $notificationId, PDO::PARAM_INT);
+    $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+    $stmt->execute();
+
+    if ($stmt->rowCount() > 0) {
+        $response['success'] = true;
+        $response['message'] = 'Notificación eliminada correctamente.';
+    } else {
+        $response['message'] = 'No se pudo eliminar la notificación o no pertenece a este usuario.';
+    }
+
+} catch (PDOException $e) {
+    $response['message'] = 'Error de base de datos: ' . $e->getMessage();
+} catch (Exception $e) {
+    $response['message'] = 'Error inesperado: ' . $e->getMessage();
+}
+
+echo json_encode($response);
 ?>

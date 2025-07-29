@@ -1770,6 +1770,117 @@ html {
     justify-content: flex-end;
 }
 
+/* Notification Bell */
+.notification-bell {
+    position: relative;
+    margin-right: var(--spacing-md);
+}
+
+.bell-icon {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.bell-icon:hover {
+    transform: scale(1.1);
+}
+
+.notification-count {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: var(--danger);
+    color: var(--white);
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: var(--font-size-xs);
+    font-weight: bold;
+    line-height: 1;
+}
+
+.notifications-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: var(--white);
+    box-shadow: var(--shadow-md);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-sm);
+    min-width: 250px;
+    max-height: 300px;
+    overflow-y: auto;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+    z-index: 1001;
+}
+
+.notifications-dropdown.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.notification-item {
+    padding: var(--spacing-sm);
+    border-bottom: 1px solid var(--gray-light);
+    color: var(--text-color);
+    font-size: var(--font-size-sm);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.notification-content {
+    flex-grow: 1;
+}
+
+.notification-actions {
+    display: flex;
+    gap: var(--spacing-xs);
+}
+
+.notification-actions .btn {
+    padding: 0.2rem 0.4rem;
+    font-size: var(--font-size-xs);
+}
+
+.notification-item:last-child {
+    border-bottom: none;
+}
+
+.notification-item.read {
+    color: var(--text-light);
+}
+
+.notification-item.unread {
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    .notification-bell {
+        margin-right: 0;
+        margin-bottom: var(--spacing-md);
+    }
+
+    .notifications-dropdown {
+        position: static;
+        width: 100%;
+        box-shadow: none;
+        border-radius: 0;
+        padding: 0;
+        border-top: 1px solid var(--gray-medium);
+    }
+
+    .notifications-dropdown.open {
+        height: auto;
+    }
+}
+
 /* Pet Profile Page */
 .pet-profile-page {
     padding: var(--spacing-xl) 0;

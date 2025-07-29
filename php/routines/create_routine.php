@@ -49,6 +49,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             $routineId = createRoutine($routineData);
             if ($routineId) {
+                // Obtener el nombre de la mascota para la notificación
+                $pet = getPetById($routineData['id_mascota']);
+                $petName = $pet ? $pet['nombre'] : 'tu mascota';
+
+                // Enviar notificación al usuario
+                $notificationTitle = "Nueva Rutina Creada";
+                $notificationMessage = "Se ha creado una nueva rutina para ${petName}: \"" . htmlspecialchars($routineData['nombre_actividad']) . "\" a las " . htmlspecialchars($routineData['hora_programada']) . " los días " . htmlspecialchars(implode(', ', $routineData['dias_semana'])) . ".";
+                sendNotification($userId, $notificationTitle, $notificationMessage, 'rutina');
+
                 header('Location: ../pets/pet_profile.php?id=' . $routineData['id_mascota'] . '&status=routine_success');
                 exit;
             } else {
@@ -158,3 +167,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </section>
     </main>
     <?php include_once __DIR__ . '/../includes/footer.php'; ?>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const selectAllDaysBtn = document.getElementById('selectAllDaysBtn');
+            const daysOfWeekCheckboxes = document.querySelectorAll('input[name="dias_semana[]"]');
+
+            if (selectAllDaysBtn && daysOfWeekCheckboxes.length > 0) {
+                selectAllDaysBtn.addEventListener('click', function() {
+                    daysOfWeekCheckboxes.forEach(checkbox => {
+                        checkbox.checked = true;
+                    });
+                });
+            }
+        });
+    </script>

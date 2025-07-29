@@ -13,6 +13,133 @@ document.addEventListener('DOMContentLoaded', function() {
         // Pero si se prefiere click, se añadiría aquí
     }
 
+    // Lógica para la campana de notificaciones
+    const notificationBell = document.getElementById('notificationBell');
+    const notificationsDropdown = document.getElementById('notificationsDropdown');
+    const notificationCount = document.getElementById('notificationCount');
+
+    if (notificationBell && notificationsDropdown && notificationCount) {
+        notificationBell.addEventListener('click', (e) => {
+            e.stopPropagation(); // Evita que el clic se propague al documento
+            notificationsDropdown.classList.toggle('open');
+            // Marcar notificaciones como leídas al abrir el dropdown (opcional)
+            markAllNotificationsAsRead();
+        });
+
+        // Cerrar el dropdown si se hace clic fuera de él
+        document.addEventListener('click', (e) => {
+            if (notificationsDropdown.classList.contains('open') && !notificationBell.contains(e.target) && !notificationsDropdown.contains(e.target)) {
+                notificationsDropdown.classList.remove('open');
+            }
+        });
+
+        // Función para obtener y mostrar notificaciones
+        function fetchNotifications() {
+            fetch('../../php/notifications/get_notifications.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        notificationCount.textContent = data.unread_count;
+                        notificationsDropdown.innerHTML = ''; // Limpiar notificaciones existentes
+
+                        if (data.notifications.length === 0) {
+                            notificationsDropdown.innerHTML = '<div class="notification-item">No hay notificaciones nuevas.</div>';
+                        } else {
+                            data.notifications.forEach(notification => {
+                                const notificationItem = document.createElement('div');
+                                notificationItem.classList.add('notification-item');
+                                if (notification.leida === 0) {
+                                    notificationItem.classList.add('unread');
+                                } else {
+                                    notificationItem.classList.add('read');
+                                }
+                                notificationItem.innerHTML = `
+                                    <div class="notification-content">
+                                        <strong>${notification.titulo}</strong><br>
+                                        <small>${notification.mensaje}</small><br>
+                                        <small class="text-muted">${new Date(notification.fecha_creacion).toLocaleString()}</small>
+                                    </div>
+                                    <div class="notification-actions">
+                                        ${notification.leida === 0 ? `<button class="btn btn-xs btn-success mark-complete-btn" data-id="${notification.id_notificacion}">Completar</button>` : ''}
+                                        <button class="btn btn-xs btn-danger delete-notification-btn" data-id="${notification.id_notificacion}">Eliminar</button>
+                                    </div>
+                                `;
+                                notificationsDropdown.appendChild(notificationItem);
+                            });
+
+                            // Añadir event listeners a los nuevos botones
+                            document.querySelectorAll('.mark-complete-btn').forEach(button => {
+                                button.addEventListener('click', function(e) {
+                                    e.stopPropagation();
+                                    const notificationId = this.dataset.id;
+                                    markNotificationAsComplete(notificationId);
+                                });
+                            });
+
+                            document.querySelectorAll('.delete-notification-btn').forEach(button => {
+                                button.addEventListener('click', function(e) {
+                                    e.stopPropagation();
+                                    const notificationId = this.dataset.id;
+                                    deleteNotification(notificationId);
+                                });
+                            });
+                        }
+                    } else {
+                        console.error('Error al obtener notificaciones:', data.message);
+                    }
+                })
+                .catch(error => console.error('Error de red al obtener notificaciones:', error));
+        }
+
+        // Función para marcar una notificación como completada
+        function markNotificationAsComplete(notificationId) {
+            fetch('php/notifications/mark_notification_complete.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `notification_id=${notificationId}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log(data.message);
+                    fetchNotifications(); // Recargar notificaciones para actualizar el estado
+                } else {
+                    console.error('Error al marcar notificación como completada:', data.message);
+                }
+            })
+            .catch(error => console.error('Error de red al marcar notificación como completada:', error));
+        }
+
+        // Función para eliminar una notificación
+        function deleteNotification(notificationId) {
+            if (confirm('¿Estás seguro de que quieres eliminar esta notificación?')) {
+                fetch('php/notifications/delete_notification.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `notification_id=${notificationId}`
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        console.log(data.message);
+                        fetchNotifications(); // Recargar notificaciones para actualizar la lista
+                    } else {
+                        console.error('Error al eliminar notificación:', data.message);
+                    }
+                })
+                .catch(error => console.error('Error de red al eliminar notificación:', error));
+            }
+        }
+
+        // Obtener notificaciones al cargar la página y cada cierto tiempo
+        fetchNotifications();
+        setInterval(fetchNotifications, 60000); // Actualizar cada 1 minuto
+    }
+
     // Lógica para el botón flotante (FAB)
     const fab = document.querySelector('.fab');
     const fabMenu = document.querySelector('.fab-menu');
@@ -173,6 +300,27 @@ document.addEventListener('DOMContentLoaded', function() {
             const selectedView = this.value;
             window.location.href = `pet_profile.php?id=${petId}&view=${selectedView}`;
         });
+    }
+
+    // Función para marcar todas las notificaciones como leídas
+    function markAllNotificationsAsRead() {
+        fetch('../../php/notifications/mark_all_notifications_read.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({})
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log(data.message);
+                fetchNotifications(); // Volver a cargar las notificaciones para actualizar el contador
+            } else {
+                console.error('Error al marcar notificaciones como leídas:', data.message);
+            }
+        })
+        .catch(error => console.error('Error de red al marcar notificaciones como leídas:', error));
     }
 
 });

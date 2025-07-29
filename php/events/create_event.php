@@ -45,6 +45,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             $eventId = createEvent($eventData);
             if ($eventId) {
+                // Obtener el nombre de la mascota para la notificación
+                $pet = getPetById($eventData['id_mascota']);
+                $petName = $pet ? $pet['nombre'] : 'tu mascota';
+
+                // Enviar notificación al usuario
+                $notificationTitle = "Nuevo Evento Creado";
+                $notificationMessage = "Se ha creado un nuevo evento para ${petName}: \"" . htmlspecialchars($eventData['titulo']) . "\" el " . htmlspecialchars(date('d/m/Y H:i', strtotime($eventData['fecha_evento']))) . ".";
+                sendNotification($userId, $notificationTitle, $notificationMessage, 'evento');
+
                 header('Location: ../pets/pet_profile.php?id=' . $eventData['id_mascota'] . '&status=event_success');
                 exit;
             } else {

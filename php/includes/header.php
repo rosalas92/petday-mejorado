@@ -19,6 +19,14 @@
                 <?php if ($isLoggedIn): ?>
                     <div class="user-menu">
                         <span class="welcome-text">Hola, <?php echo htmlspecialchars($user['nombre_completo']); ?></span>
+                        <div class="notification-bell">
+                            <img src="<?php echo URL_ADMIN; ?>/images/campana.png" alt="Notificaciones" class="bell-icon" id="notificationBell">
+                            <span class="notification-count" id="notificationCount">0</span>
+                            <div class="notifications-dropdown" id="notificationsDropdown">
+                                <!-- Las notificaciones se cargarán aquí dinámicamente -->
+                                <div class="notification-item">No hay notificaciones nuevas.</div>
+                            </div>
+                        </div>
                         <div class="user-dropdown">
                             <button class="user-btn">👤</button>
                             <div class="dropdown-content">
