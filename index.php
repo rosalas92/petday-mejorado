@@ -136,7 +136,7 @@ if ($isLoggedIn) {
             <section class="dashboard">
                 <div class="container">
                     <div class="dashboard-header">
-                        <h2>Tu Dashboard</h2>
+                        <h2>Tareas</h2>
                         <div class="current-date">
                             <span class="date-icon">📅</span>
                             <span id="current-date"></span>

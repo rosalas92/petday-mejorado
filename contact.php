@@ -2,7 +2,7 @@
 require_once 'php/includes/header.php';
 ?>
 
-<main class="container my-5">
+<main class="container my-5 contact-page">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
