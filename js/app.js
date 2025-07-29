@@ -57,10 +57,11 @@ document.addEventListener('DOMContentLoaded', function() {
                                     <div class="notification-content">
                                         <strong>${notification.titulo}</strong><br>
                                         <small>${notification.mensaje}</small><br>
-                                        <small class="text-muted">${new Date(notification.fecha_creacion).toLocaleString()}</small>
+                                        <small class="text-muted">${new Date(notification.fecha_creacion || notification.fecha_envio).toLocaleString()}</small>
                                     </div>
                                     <div class="notification-actions">
                                         ${notification.leida === 0 ? `<button class="btn btn-xs btn-success mark-complete-btn" data-id="${notification.id_notificacion}">Completar</button>` : ''}
+                                        <button class="btn btn-xs btn-outline-success mark-completed-btn" data-id="${notification.id_notificacion}">Completada</button>
                                         <button class="btn btn-xs btn-danger delete-notification-btn" data-id="${notification.id_notificacion}">Eliminar</button>
                                     </div>
                                 `;
@@ -76,6 +77,18 @@ document.addEventListener('DOMContentLoaded', function() {
                                 });
                             });
 
+                            document.querySelectorAll('.mark-completed-btn').forEach(button => {
+                                button.addEventListener('click', function(e) {
+                                    e.stopPropagation();
+                                    const notificationId = this.dataset.id;
+                                    const btn = this;
+                                    markNotificationAsComplete(notificationId);
+                                    btn.classList.remove('btn-outline-success');
+                                    btn.classList.add('btn-success');
+                                    btn.textContent = 'Completada';
+                                });
+                            });
+
                             document.querySelectorAll('.delete-notification-btn').forEach(button => {
                                 button.addEventListener('click', function(e) {
                                     e.stopPropagation();
@@ -84,6 +97,36 @@ document.addEventListener('DOMContentLoaded', function() {
                                 });
                             });
                         }
+
+                        // Botón para borrar todas las notificaciones
+                        const clearAllBtn = document.createElement('button');
+                        clearAllBtn.className = 'btn btn-sm btn-danger w-100 mt-2 clear-all-notifications-btn';
+                        clearAllBtn.textContent = 'Borrar todas las notificaciones';
+                        clearAllBtn.style.marginTop = '0.5rem';
+                        notificationsDropdown.appendChild(clearAllBtn);
+
+                        clearAllBtn.addEventListener('click', function() {
+                            if (confirm('¿Seguro que quieres borrar todas las notificaciones?')) {
+                                fetch('/petday/php/notifications/delete_all_notifications.php', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({})
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        notificationsDropdown.innerHTML = '<div class="notification-item">No hay notificaciones nuevas.</div>';
+                                        notificationCount.textContent = '0';
+                                    } else {
+                                        alert('Error al borrar todas las notificaciones: ' + (data.message || ''));
+                                    }
+                                })
+                                .catch(error => alert('Error de red al borrar todas las notificaciones: ' + error));
+                            }
+                        });
+// ...existing code...
                     } else {
                         console.error('Error al obtener notificaciones:', data.message);
                     }
@@ -126,7 +169,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 .then(data => {
                     if (data.success) {
                         console.log(data.message);
-                        fetchNotifications(); // Recargar notificaciones para actualizar la lista
+                        // Quitar la notificación visualmente sin recargar toda la lista
+                        const notifElem = document.querySelector(`.delete-notification-btn[data-id="${notificationId}"]`).closest('.notification-item');
+                        if (notifElem) notifElem.remove();
                     } else {
                         console.error('Error al eliminar notificación:', data.message);
                     }
