@@ -1580,6 +1580,60 @@ html {
     max-height: 400px; /* Limita la altura máxima */
 }
 
+/* Estilos para la tabla de medidas */
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch; /* Para un desplazamiento suave en iOS */
+    margin-bottom: var(--spacing-md);
+}
+
+.measurements-section .table {
+    min-width: 600px; /* Ancho mínimo para forzar el scroll si es necesario */
+}
+
+.measurements-section .table th,
+.measurements-section .table td {
+    white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+    padding: var(--spacing-sm) var(--spacing-md);
+}
+
+.measurements-section .table td:last-child {
+    white-space: normal; /* Permite que los botones se ajusten */
+    text-align: right;
+}
+
+.measurements-section .table .btn {
+    margin-bottom: var(--spacing-xs); /* Espacio entre botones si se apilan */
+}
+
+@media (max-width: 768px) {
+    .measurements-section .table th,
+    .measurements-section .table td {
+        padding: var(--spacing-sm);
+    }
+
+    .measurements-section .table td:last-child .btn {
+        display: inline-block; /* Asegura que los botones se muestren en línea */
+        margin-right: var(--spacing-xs);
+    }
+
+    .measurements-section .table td:last-child .btn:last-child {
+        margin-right: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .measurements-section .table td:last-child .btn {
+        display: block; /* Apila los botones verticalmente */
+        width: 100%;
+        margin-bottom: var(--spacing-xs);
+    }
+
+    .measurements-section .table td:last-child .btn:last-child {
+        margin-bottom: 0;
+    }
+}
+
 /* Testimonials Section */
 .testimonials {
     padding: var(--spacing-xxl) 0;
@@ -1721,6 +1775,11 @@ html {
     padding: var(--spacing-xl) 0;
 }
 
+/* Anula el overflow:hidden en la tarjeta de medidas para permitir el scroll */
+.measurements-section.card {
+    overflow: visible;
+}
+
 .profile-header {
     display: flex;
     align-items: center;
@@ -1818,24 +1877,97 @@ html {
     border-bottom: none;
 }
 
-@media (max-width: 768px) {
+/* Estilos responsivos para el perfil de la mascota */
+@media (max-width: 1200px) {
+    .pet-profile-content {
+        grid-template-columns: 1fr; /* Apila las tarjetas en una sola columna */
+    }
+}
+
+@media (max-width: 992px) {
     .profile-header {
         flex-direction: column;
         text-align: center;
-        gap: var(--spacing-md);
+        gap: var(--spacing-lg);
     }
 
     .profile-actions {
         margin-left: 0;
-        width: 100%;
         display: flex;
+        flex-wrap: wrap;
         justify-content: center;
+        gap: var(--spacing-sm);
+    }
+}
+
+@media (max-width: 768px) {
+    .profile-header {
+        padding-bottom: var(--spacing-lg);
+    }
+
+    .profile-photo, .profile-avatar {
+        width: 120px;
+        height: 120px;
+        font-size: 5rem;
+    }
+
+    .profile-info h1 {
+        font-size: var(--font-size-2xl);
+    }
+
+    .profile-details {
+        font-size: var(--font-size-base);
     }
 
     .profile-content {
-        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+    }
+
+    .routines-section, .medical-records-section, .measurements-section, .events-section {
+        width: 100%;
+    }
+
+    .calendar-nav {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+
+    .calendar-grid {
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    }
+
+    .calendar-day {
+        min-height: 60px;
     }
 }
+
+@media (max-width: 480px) {
+    .profile-actions .btn {
+        width: 100%;
+    }
+
+    .card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-sm);
+    }
+
+    .card-header .btn {
+        align-self: flex-end;
+    }
+
+    .routine-item-profile {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-sm);
+    }
+
+    .routine-item-actions {
+        margin-left: 0;
+        align-self: flex-end;
+    }
+}
+
 
 /* Reports Page */
 .reports-page {

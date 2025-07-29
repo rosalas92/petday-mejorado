@@ -44,8 +44,8 @@ $events = getUpcomingEvents($petId, 365); // Próximos eventos del año
     <?php include_once __DIR__ . '/../includes/header.php'; ?>
 
     <main class="main-content">
-        <section class="pet-profile-page">
-            <div class="container">
+    <section class="pet-profile-page">
+        <div class="container pet-profile-container">
                 <!-- Cabecera del Perfil -->
                 <div class="profile-header">
                     <div class="profile-photo-container">
