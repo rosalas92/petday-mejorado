@@ -490,3 +490,16 @@ $events = getUpcomingEvents($petId, 365); // Próximos eventos del año
     </script>
     <script src="../../js/app.js?v=1.7"></script>
     <script src="../../js/charts.js?v=1.1"></script>
+
+    <!-- Modal para detalles del día -->
+    <div id="dayDetailsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalDayTitle"></h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body" id="modalEventsList">
+                <!-- Los eventos se cargarán aquí con JS -->
+            </div>
+        </div>
+    </div>
