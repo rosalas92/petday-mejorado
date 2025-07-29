@@ -13,14 +13,14 @@
                     <h4>Enlaces</h4>
                     <ul>
                         <li><a href="#features">Características</a></li>
-                        <li><a href="php/auth/register.php">Registrarse</a></li>
-                        <li><a href="php/auth/login.php">Iniciar Sesión</a></li>
+                        <li><a href="<?php echo URL_ADMIN; ?>/php/auth/register.php">Registrarse</a></li>
+                        <li><a href="<?php echo URL_ADMIN; ?>/php/auth/login.php">Iniciar Sesión</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
                     <h4>Soporte</h4>
                     <ul>
-                        <li><a href="docs/user_manual.html">Manual de Usuario</a></li>
+                        <li><a href="<?php echo URL_ADMIN; ?>/docs/user_manual.html">Manual de Usuario</a></li>
                         <li><a href="mailto:soporte@petday.com">Contacto</a></li>
                     </ul>
                 </div>
