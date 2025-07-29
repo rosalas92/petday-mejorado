@@ -503,3 +503,5 @@ $events = getUpcomingEvents($petId, 365); // Próximos eventos del año
             </div>
         </div>
     </div>
+
+    <?php include_once __DIR__ . '/../includes/footer.php'; ?>
