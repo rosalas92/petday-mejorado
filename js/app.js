@@ -360,9 +360,6 @@ initializeApp();
  * Inicializar la aplicación principal
  */
 function initializeApp() {
-    // Configurar el botón flotante (FAB)
-    initializeFAB();
-    
     // Actualizar la fecha y hora actual
     updateCurrentDateTime();
 
