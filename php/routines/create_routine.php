@@ -55,8 +55,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 // Enviar notificación al usuario
                 $notificationTitle = "Nueva Rutina Creada";
-                $notificationMessage = "Se ha creado una nueva rutina para ${petName}: \"" . htmlspecialchars($routineData['nombre_actividad']) . "\" a las " . htmlspecialchars($routineData['hora_programada']) . " los días " . htmlspecialchars(implode(', ', $routineData['dias_semana'])) . ".";
-                sendNotification($userId, $notificationTitle, $notificationMessage, 'rutina');
+                $notificationMessage = "Se ha creado una nueva rutina para $petName: \"" . htmlspecialchars($routineData['nombre_actividad']) . "\" a las " . htmlspecialchars($routineData['hora_programada']) . " los días " . htmlspecialchars(implode(', ', $routineData['dias_semana'])) . ".";
+                sendNotification($userId, $notificationTitle, $notificationMessage, 'rutina', $routineId);
 
                 header('Location: ../pets/pet_profile.php?id=' . $routineData['id_mascota'] . '&status=routine_success');
                 exit;

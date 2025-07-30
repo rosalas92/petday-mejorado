@@ -35,10 +35,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Función para obtener y mostrar notificaciones
         function fetchNotifications() {
-            fetch('../../php/notifications/get_notifications.php')
+            fetch('/petday/php/notifications/get_notifications.php')
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
+                        console.log('Notificaciones obtenidas:', data.notifications);
                         notificationCount.textContent = data.unread_count;
                         notificationsDropdown.innerHTML = ''; // Limpiar notificaciones existentes
 
@@ -57,10 +58,10 @@ document.addEventListener('DOMContentLoaded', function() {
                                     <div class="notification-content">
                                         <strong>${notification.titulo}</strong><br>
                                         <small>${notification.mensaje}</small><br>
-                                        <small class="text-muted">${new Date(notification.fecha_creacion).toLocaleString()}</small>
+                                        <small class="text-muted">${new Date(notification.fecha_envio).toLocaleString()}</small>
                                     </div>
                                     <div class="notification-actions">
-                                        ${notification.leida === 0 ? `<button class="btn btn-xs btn-success mark-complete-btn" data-id="${notification.id_notificacion}">Completar</button>` : ''}
+                                        ${notification.tipo === 'rutina' && notification.id_entidad_relacionada ? `<button class="btn btn-xs btn-outline-success mark-routine-complete-btn ${notification.leida === 1 ? 'btn-notification-completed' : ''}" data-notification-id="${notification.id_notificacion}" data-routine-id="${notification.id_entidad_relacionada}">Completada</button>` : ''}
                                         <button class="btn btn-xs btn-danger delete-notification-btn" data-id="${notification.id_notificacion}">Eliminar</button>
                                     </div>
                                 `;
@@ -68,11 +69,12 @@ document.addEventListener('DOMContentLoaded', function() {
                             });
 
                             // Añadir event listeners a los nuevos botones
-                            document.querySelectorAll('.mark-complete-btn').forEach(button => {
+                            document.querySelectorAll('.mark-routine-complete-btn').forEach(button => {
                                 button.addEventListener('click', function(e) {
                                     e.stopPropagation();
-                                    const notificationId = this.dataset.id;
-                                    markNotificationAsComplete(notificationId);
+                                    const notificationId = this.dataset.notificationId;
+                                    const routineId = this.dataset.routineId;
+                                    markRoutineAsCompleteFromNotification(notificationId, routineId);
                                 });
                             });
 
@@ -92,35 +94,34 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Función para marcar una notificación como completada
-        function markNotificationAsComplete(notificationId) {
-            // Evitar marcar como completada si ya lo está
-            if (button.classList.contains('btn-success')) {
-                return; // No hacer nada si ya está completada
-            }
-
-            fetch('php/notifications/mark_notification_complete.php', {
+        function markRoutineAsCompleteFromNotification(notificationId, routineId) {
+            fetch('/petday/php/notifications/mark_routine_complete.php', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Content-Type': 'application/json',
                 },
-                body: `notification_id=${notificationId}`
+                body: JSON.stringify({ 
+                    notification_id: notificationId,
+                    routine_id: routineId
+                })
             })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
                     console.log(data.message);
                     fetchNotifications(); // Recargar notificaciones para actualizar el estado
+                    updateRoutineStatusIcons(); // Actualizar el estado visual de las rutinas
                 } else {
-                    console.error('Error al marcar notificación como completada:', data.message);
+                    alert('Error: ' + data.message); // Mostrar error al usuario
                 }
             })
-            .catch(error => console.error('Error de red al marcar notificación como completada:', error));
+            .catch(error => console.error('Error de red al marcar la rutina como completada:', error));
         }
 
         // Función para eliminar una notificación
         function deleteNotification(notificationId) {
             if (confirm('¿Estás seguro de que quieres eliminar esta notificación?')) {
-                fetch('php/notifications/delete_notification.php', {
+                fetch('/petday/php/notifications/delete_notification.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
@@ -267,7 +268,7 @@ document.addEventListener('DOMContentLoaded', function() {
         routineStatusIcons.forEach(iconElement => {
             const routineId = iconElement.dataset.routineId;
             if (routineId) {
-                fetch(`../routines/get_routine_status.php?id=${routineId}`)
+                fetch(`/petday/php/routines/get_routine_status.php?id=${routineId}`)
                     .then(response => response.json())
                     .then(data => {
                         if (data.success && data.status) {
@@ -309,7 +310,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Función para marcar todas las notificaciones como leídas
     function markAllNotificationsAsRead() {
-        fetch('../../php/notifications/mark_all_notifications_read.php', {
+        fetch('/petday/php/notifications/mark_all_notifications_read.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -400,7 +401,7 @@ function setupMarkRoutineComplete() {
             const routineId = this.dataset.routineId;
             const routineItem = this.closest('.routine-item');
 
-            fetch('php/routines/mark_complete.php', {
+            fetch('/petday/php/routines/mark_complete.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded', // Cambiado a form-urlencoded

@@ -252,8 +252,9 @@ html {
 }
 
 .btn-outline-success:hover {
-    background: var(--primary-color);
-    color: var(--white);
+    background: transparent; /* Mantener el fondo transparente */
+    color: var(--primary-dark); /* Oscurecer el texto ligeramente */
+    border-color: var(--primary-dark); /* Oscurecer el borde ligeramente */
 }
 
 .btn-outline-danger {
@@ -1944,6 +1945,18 @@ html {
 .notification-actions .btn {
     padding: 0.1rem 0.25rem;
     font-size: 0.65rem;
+}
+
+.btn-notification-completed {
+    background-color: #95d5b2 !important;
+    color: var(--white) !important;
+    border-color: #95d5b2 !important;
+}
+
+.btn-notification-completed:hover {
+    background-color: #95d5b2 !important; /* Mantener el color al pasar el cursor */
+    color: var(--white) !important;
+    border-color: #95d5b2 !important;
 }
 
 .notification-item:last-child {

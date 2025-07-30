@@ -480,19 +480,20 @@ function getPetStats($petId, $days = 30) {
 }
 
 /**
- * Función para enviar notificación (placeholder para futuras implementaciones)
+ * Función para enviar notificación
  * @param int $userId ID del usuario
  * @param string $title Título de la notificación
  * @param string $message Mensaje
  * @param string $type Tipo de notificación
+ * @param int|null $entityId ID de la entidad relacionada (ej. id_rutina)
  * @return bool
  */
-function sendNotification($userId, $title, $message, $type = 'recordatorio') {
-    $sql = "INSERT INTO notificaciones (id_usuario, tipo, titulo, mensaje, fecha_envio) 
-            VALUES (?, ?, ?, ?, NOW())";
+function sendNotification($userId, $title, $message, $type = 'recordatorio', $entityId = null) {
+    $sql = "INSERT INTO notificaciones (id_usuario, tipo, id_entidad_relacionada, titulo, mensaje, fecha_envio) 
+            VALUES (?, ?, ?, ?, ?, NOW())";
     
     try {
-        executeQuery($sql, [$userId, $type, $title, $message]);
+        executeQuery($sql, [$userId, $type, $entityId, $title, $message]);
         return true;
     } catch (Exception $e) {
         error_log("Error al enviar notificación: " . $e->getMessage());
@@ -744,7 +745,23 @@ function updateRoutine($routineId, $routineData) {
 
     try {
         $stmt = executeQuery($sql, $params);
-        return $stmt->rowCount() > 0;
+        $wasUpdated = $stmt->rowCount() > 0;
+
+        if ($wasUpdated) {
+            // Obtener datos para la notificación
+            $routine = getRoutineById($routineId);
+            if ($routine) {
+                $pet = getPetById($routine['id_mascota']);
+                if ($pet) {
+                    $petName = $pet['nombre'];
+                    $userId = $pet['id_usuario'];
+                    
+                    // Enviar notificación
+                    $notificationTitle = "Rutina Actualizada";                    $notificationMessage = "La rutina \"" . htmlspecialchars($routineData['nombre_actividad']) . "\" para $petName ha sido actualizada.";                    sendNotification($userId, $notificationTitle, $notificationMessage, 'rutina', $routineId);
+                }
+            }
+        }
+        return $wasUpdated;
     } catch (Exception $e) {
         logError($e->getMessage(), __FILE__, __LINE__);
         return false;
