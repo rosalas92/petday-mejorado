@@ -169,6 +169,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 60000); // Actualizar cada 1 minuto
     }
 
+});
+
+initializeApp();
+
     // Lógica para el botón flotante (FAB)
     const fab = document.querySelector('.fab');
     const fabMenu = document.querySelector('.fab-menu');
@@ -351,8 +355,6 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch(error => console.error('Error de red al marcar notificaciones como leídas:', error));
     }
-
-});
 
 /**
  * Inicializar la aplicación principal
