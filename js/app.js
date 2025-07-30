@@ -3,6 +3,8 @@
  * Funcionalidades interactivas para la aplicación
  */
 
+console.log('app.js cargado y ejecutándose');
+
 // Inicialización cuando el DOM está listo
 document.addEventListener('DOMContentLoaded', function() {
 

@@ -275,4 +275,6 @@ if ($isLoggedIn) {
                 </div>
             </section>
 
+    <script src="js/app.js?v=1.7"></script>
+
     <?php include 'php/includes/footer.php'; ?>
