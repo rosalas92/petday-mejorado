@@ -92,7 +92,7 @@ $events = getUpcomingEvents($petId, 365); // Próximos eventos del año
                                                 <span><?php echo date('H:i', strtotime($routine['hora_programada'])); ?></span>
                                                 <small class="text-muted"><?php echo str_replace(',', ', ', $routine['dias_semana']); ?></small>
                                             </div>
-                                            <div class="routine-item-actions">
+                                            <div class="routine-item-actions d-flex flex-column gap-sm">
                                                 <!-- Placeholder para icono de estado -->
                                                 <span class="routine-status-icon" data-routine-id="<?php echo $routine['id_rutina']; ?>"></span>
                                                 <a href="../routines/edit_routine.php?id=<?php echo $routine['id_rutina']; ?>" class="btn btn-xs btn-outline">Editar</a>

@@ -245,13 +245,35 @@ html {
     color: var(--white);
 }
 
+.btn-outline-success {
+    background: transparent;
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+}
+
+.btn-outline-success:hover {
+    background: var(--primary-color);
+    color: var(--white);
+}
+
+.btn-outline-danger {
+    background: transparent;
+    color: var(--danger);
+    border: 2px solid var(--danger);
+}
+
+.btn-outline-danger:hover {
+    background: var(--danger);
+    color: var(--white);
+}
+
 .btn-success {
-    background: var(--success);
+    background: var(--primary-color);
     color: var(--white);
 }
 
 .btn-success:hover {
-    background: #218838;
+    background: var(--primary-dark);
 }
 
 .btn-warning {
@@ -1915,12 +1937,13 @@ html {
 
 .notification-actions {
     display: flex;
+    flex-direction: column;
     gap: var(--spacing-xs);
 }
 
 .notification-actions .btn {
-    padding: 0.2rem 0.4rem;
-    font-size: var(--font-size-xs);
+    padding: 0.1rem 0.25rem;
+    font-size: 0.65rem;
 }
 
 .notification-item:last-child {
@@ -2058,14 +2081,16 @@ html {
 
 .routine-item-profile {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: var(--spacing-md);
     padding: var(--spacing-md);
-    background: var(--gray-light);
     border-radius: var(--radius-md);
+    transition: background-color 0.2s ease;
 }
 
 .routine-item-details {
+    display: flex;
+    flex-direction: column;
     flex-grow: 1;
 }
 
