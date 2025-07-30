@@ -141,9 +141,30 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-        // Obtener notificaciones al cargar la página y cada cierto tiempo
+        // Función para verificar y crear notificaciones de rutinas próximas
+        function checkUpcomingRoutines() {
+            fetch('/petday/php/notifications/check_upcoming_routines.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        if (data.notifications_created > 0) {
+                            console.log(`Se crearon ${data.notifications_created} notificaciones de rutina.`);
+                            fetchNotifications(); // Recargar notificaciones si se crearon nuevas
+                        }
+                    } else {
+                        console.error('Error al verificar rutinas próximas:', data.message);
+                    }
+                })
+                .catch(error => console.error('Error de red al verificar rutinas próximas:', error));
+        }
+
+        // Obtener notificaciones y verificar rutinas próximas al cargar la página y cada cierto tiempo
         fetchNotifications();
-        setInterval(fetchNotifications, 60000); // Actualizar cada 1 minuto
+        checkUpcomingRoutines(); // Ejecutar al inicio
+        setInterval(() => {
+            fetchNotifications();
+            checkUpcomingRoutines();
+        }, 60000); // Actualizar cada 1 minuto
     }
 
     // Lógica para el botón flotante (FAB)
