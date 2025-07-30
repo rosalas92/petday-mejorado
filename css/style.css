@@ -1999,6 +1999,26 @@ html {
         padding: 0.1rem 0.3rem;
     }
 
+    .routines-list-profile .routine-item-profile {
+        flex-direction: row;
+        align-items: center;
+        background-color: var(--white);
+        border: 1px solid var(--gray-medium);
+        border-radius: var(--radius-md);
+        margin-bottom: var(--spacing-sm);
+        padding: var(--spacing-sm);
+    }
+
+    .routines-list-profile .routine-item-details {
+        flex-grow: 1;
+        text-align: left;
+    }
+
+    .routines-list-profile .routine-item-actions {
+        flex-direction: row;
+        gap: var(--spacing-xs);
+    }
+
     .notification-count {
         top: 0;
         right: 0;
