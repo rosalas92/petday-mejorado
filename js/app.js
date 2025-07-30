@@ -57,11 +57,11 @@ document.addEventListener('DOMContentLoaded', function() {
                                     <div class="notification-content">
                                         <strong>${notification.titulo}</strong><br>
                                         <small>${notification.mensaje}</small><br>
-                                        <small class="text-muted">${new Date(notification.fecha_creacion || notification.fecha_envio).toLocaleString()}</small>
+                                        <small class="text-muted">${new Date(notification.fecha_creacion).toLocaleString()}</small>
                                     </div>
                                     <div class="notification-actions">
-                                        <button class="btn btn-xs ${notification.leida ? 'btn-success' : 'btn-outline-success'} mark-complete-btn" data-id="${notification.id_notificacion}">${notification.leida ? 'Completada' : 'Completar'}</button>
-                                        <button class="btn btn-xs btn-outline-danger delete-notification-btn" data-id="${notification.id_notificacion}">Eliminar</button>
+                                        ${notification.leida === 0 ? `<button class="btn btn-xs btn-success mark-complete-btn" data-id="${notification.id_notificacion}">Completar</button>` : ''}
+                                        <button class="btn btn-xs btn-danger delete-notification-btn" data-id="${notification.id_notificacion}">Eliminar</button>
                                     </div>
                                 `;
                                 notificationsDropdown.appendChild(notificationItem);
@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 button.addEventListener('click', function(e) {
                                     e.stopPropagation();
                                     const notificationId = this.dataset.id;
-                                    markNotificationAsComplete(notificationId, this);
+                                    markNotificationAsComplete(notificationId);
                                 });
                             });
 
@@ -84,40 +84,6 @@ document.addEventListener('DOMContentLoaded', function() {
                                 });
                             });
                         }
-
-                        // Botón para borrar todas las notificaciones
-                        if (data.notifications.length > 0) {
-                            const clearAllBtn = document.createElement('button');
-                            clearAllBtn.className = 'btn btn-xs btn-outline-danger w-100 mt-2 clear-all-notifications-btn';
-                            clearAllBtn.textContent = 'Borrar todo';
-                            clearAllBtn.style.marginTop = '0.5rem';
-                            clearAllBtn.style.width = '80%';
-                            clearAllBtn.style.fontSize = '0.6rem';
-                            clearAllBtn.style.alignSelf = 'center';
-                            notificationsDropdown.appendChild(clearAllBtn);
-
-                            clearAllBtn.addEventListener('click', function() {
-                                if (confirm('¿Seguro que quieres borrar todas las notificaciones?')) {
-                                    fetch('../../php/notifications/delete_all_notifications.php', {
-                                        method: 'POST',
-                                        headers: {
-                                            'Content-Type': 'application/json',
-                                        },
-                                        body: JSON.stringify({})
-                                    })
-                                    .then(response => response.json())
-                                    .then(data => {
-                                        if (data.success) {
-                                            notificationsDropdown.innerHTML = '<div class="notification-item">No hay notificaciones nuevas.</div>';
-                                            notificationCount.textContent = '0';
-                                        } else {
-                                            alert('Error al borrar las notificaciones: ' + (data.message || ''));
-                                        }
-                                    })
-                                    .catch(error => alert('Error de red: ' + error));
-                                }
-                            });
-                        }
                     } else {
                         console.error('Error al obtener notificaciones:', data.message);
                     }
@@ -126,13 +92,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Función para marcar una notificación como completada
-        function markNotificationAsComplete(notificationId, button) {
+        function markNotificationAsComplete(notificationId) {
             // Evitar marcar como completada si ya lo está
             if (button.classList.contains('btn-success')) {
                 return; // No hacer nada si ya está completada
             }
 
-            fetch('../../php/notifications/mark_notification_complete.php', {
+            fetch('php/notifications/mark_notification_complete.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
@@ -142,24 +108,19 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    button.textContent = 'Completada';
-                    button.classList.remove('btn-outline-success');
-                    button.classList.add('btn-success');
-                    button.closest('.notification-item').classList.remove('unread');
-                    button.closest('.notification-item').classList.add('read');
-                    // Opcional: actualizar el contador de notificaciones no leídas
-                    updateUnreadCount(); 
+                    console.log(data.message);
+                    fetchNotifications(); // Recargar notificaciones para actualizar el estado
                 } else {
                     console.error('Error al marcar notificación como completada:', data.message);
                 }
             })
-            .catch(error => console.error('Error de red:', error));
+            .catch(error => console.error('Error de red al marcar notificación como completada:', error));
         }
 
         // Función para eliminar una notificación
         function deleteNotification(notificationId) {
             if (confirm('¿Estás seguro de que quieres eliminar esta notificación?')) {
-                fetch('../../php/notifications/delete_notification.php', {
+                fetch('php/notifications/delete_notification.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
@@ -169,21 +130,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        document.querySelector(`.delete-notification-btn[data-id="${notificationId}"]`).closest('.notification-item').remove();
-                        // Opcional: actualizar el contador de notificaciones no leídas
-                        updateUnreadCount();
+                        console.log(data.message);
+                        fetchNotifications(); // Recargar notificaciones para actualizar la lista
                     } else {
                         console.error('Error al eliminar notificación:', data.message);
                     }
                 })
-                .catch(error => console.error('Error de red:', error));
+                .catch(error => console.error('Error de red al eliminar notificación:', error));
             }
-        }
-
-        // Función para actualizar el contador de no leídas
-        function updateUnreadCount() {
-            const unreadCount = document.querySelectorAll('.notification-item.unread').length;
-            notificationCount.textContent = unreadCount;
         }
 
         // Obtener notificaciones al cargar la página y cada cierto tiempo
