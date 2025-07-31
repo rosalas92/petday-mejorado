@@ -313,24 +313,35 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (editDayButton) {
             editDayButton.addEventListener('click', () => {
-                const petsWithEvents = [...new Map(currentEvents.map(e => [e.pet_id, e])).values()];
-
-                if (petsWithEvents.length === 1) {
-                    window.location.href = `/petday/php/pets/pet_profile.php?id=${petsWithEvents[0].pet_id}`;
+                if (window.location.pathname.includes('pet_profile.php')) {
+                    const routinesSection = document.querySelector('.routines-section');
+                    if (routinesSection) {
+                        routinesSection.scrollIntoView({ behavior: 'smooth' });
+                        const modal = editDayButton.closest('.modal');
+                        if (modal) {
+                            modal.classList.remove('open');
+                        }
+                    }
                 } else {
-                    modalDayTitle.textContent = 'Editar Rutinas';
-                    modalEventsList.innerHTML = '<p>Selecciona una mascota para editar sus rutinas:</p>';
-                    const petList = document.createElement('div');
-                    petList.className = 'pet-selection-list';
-                    petsWithEvents.forEach(pet => {
-                        const petLink = document.createElement('a');
-                        petLink.href = `/petday/php/pets/pet_profile.php?id=${pet.pet_id}`;
-                        petLink.className = 'btn btn-outline';
-                        petLink.textContent = pet.pet_name;
-                        petList.appendChild(petLink);
-                    });
-                    modalEventsList.appendChild(petList);
-                    editDayButton.style.display = 'none';
+                    const petsWithEvents = [...new Map(currentEvents.map(e => [e.pet_id, e])).values()];
+
+                    if (petsWithEvents.length === 1) {
+                        window.location.href = `/petday/php/pets/pet_profile.php?id=${petsWithEvents[0].pet_id}`;
+                    } else {
+                        modalDayTitle.textContent = 'Editar Rutinas';
+                        modalEventsList.innerHTML = '<p>Selecciona una mascota para editar sus rutinas:</p>';
+                        const petList = document.createElement('div');
+                        petList.className = 'pet-selection-list';
+                        petsWithEvents.forEach(pet => {
+                            const petLink = document.createElement('a');
+                            petLink.href = `/petday/php/pets/pet_profile.php?id=${pet.pet_id}`;
+                            petLink.className = 'btn btn-outline';
+                            petLink.textContent = pet.pet_name;
+                            petList.appendChild(petLink);
+                        });
+                        modalEventsList.appendChild(petList);
+                        editDayButton.style.display = 'none';
+                    }
                 }
             });
         }

@@ -501,6 +501,9 @@ $events = getUpcomingEvents($petId, 365); // Próximos eventos del año
             <div class="modal-body" id="modalEventsList">
                 <!-- Los eventos se cargarán aquí con JS -->
             </div>
+            <div class="modal-footer" style="text-align: center;">
+                <button id="editDayButton" class="btn btn-primary">Editar</button>
+            </div>
         </div>
     </div>
 
