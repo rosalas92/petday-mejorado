@@ -398,7 +398,6 @@ html {
     }
     .header-content {
         gap: 0.1rem !important;
-        padding: 0.2rem 0 0.1rem 0 !important;
         min-height: unset !important;
     }
     .notification-bell {
@@ -2029,6 +2028,8 @@ html {
         align-items: center;
         background-color: var(--white);
         border: 1px solid var(--gray-medium);
+        
+        
         border-radius: var(--radius-md);
         margin-bottom: var(--spacing-sm);
         padding: var(--spacing-sm);
@@ -2130,6 +2131,7 @@ html {
     align-items: center;
     padding: var(--spacing-md);
     border-radius: var(--radius-md);
+            border: 1px solid var(--gray-medium);
     transition: background-color 0.2s ease;
 }
 
