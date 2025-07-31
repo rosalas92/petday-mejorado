@@ -1143,6 +1143,13 @@ html {
     color: var(--danger);
 }
 
+.modal-footer {
+    padding-top: var(--spacing-md);
+    margin-top: var(--spacing-lg);
+    border-top: 1px solid var(--gray-medium);
+    text-align: right;
+}
+
 /* Estilos para los eventos dentro del modal */
 .modal-body .event-item {
     margin-bottom: var(--spacing-sm);

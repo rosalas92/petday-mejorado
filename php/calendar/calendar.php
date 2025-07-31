@@ -159,7 +159,7 @@ $monthNames = [
                         <?php else: ?>
                             <div class="calendar-day <?php echo (date('Y-m-d') == $dayData['date']) ? 'today' : ''; ?>" 
                                  data-date="<?php echo $dayData['date']; ?>"
-                                 data-events='<?php echo json_encode(array_merge($dayData['routines'], $dayData['events'])); ?>'>
+                                 data-events='<?php echo htmlspecialchars(json_encode(array_merge($dayData['routines'], $dayData['events'])), ENT_QUOTES, 'UTF-8'); ?>'>
                                 <span class="day-number"><?php echo $dayData['day']; ?></span>
                                 <div class="day-events">
                                     <?php $colorIndex = 1; // Inicializar el índice de color ?>
@@ -204,6 +204,9 @@ $monthNames = [
             </div>
             <div class="modal-body" id="modalEventsList">
                 <!-- Los eventos se cargarán aquí con JS -->
+            </div>
+            <div class="modal-footer">
+                <button id="clearModalButton" class="btn btn-outline">Limpiar</button>
             </div>
         </div>
     </div>
