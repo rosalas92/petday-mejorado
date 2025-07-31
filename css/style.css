@@ -1971,6 +1971,11 @@ html {
     font-weight: bold;
 }
 
+.delete-all-notifications-btn {
+    display: block;
+    margin: var(--spacing-sm) auto 0;
+}
+
 @media (max-width: 768px) {
     .notification-bell {
         margin-right: 0;

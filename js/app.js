@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         notificationsDropdown.innerHTML = ''; // Limpiar notificaciones existentes
 
                         if (data.notifications.length === 0) {
-                            notificationsDropdown.innerHTML = '<div class="notification-item">No hay notificaciones nuevas.</div>';
+                            notificationsDropdown.innerHTML = '<div class="notification-item">No tienes notificaciones nuevas.</div>';
                         } else {
                             data.notifications.forEach(notification => {
                                 const notificationItem = document.createElement('div');
@@ -68,6 +68,16 @@ document.addEventListener('DOMContentLoaded', function() {
                                     </div>
                                 `;
                                 notificationsDropdown.appendChild(notificationItem);
+                            });
+
+                            const deleteAllButton = document.createElement('button');
+                            deleteAllButton.classList.add('btn', 'btn-xs', 'btn-danger', 'delete-all-notifications-btn');
+                            deleteAllButton.textContent = 'Borrar Notificaciones';
+                            notificationsDropdown.appendChild(deleteAllButton);
+
+                            deleteAllButton.addEventListener('click', function(e) {
+                                e.stopPropagation();
+                                deleteAllNotifications();
                             });
 
                             // Añadir event listeners a los nuevos botones
@@ -354,6 +364,30 @@ initializeApp();
             }
         })
         .catch(error => console.error('Error de red al marcar notificaciones como leídas:', error));
+    }
+
+    function deleteAllNotifications() {
+        if (confirm('¿Estás seguro de que quieres eliminar todas las notificaciones?')) {
+            fetch('/petday/php/notifications/delete_all_notifications.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log(data.message);
+                    const notificationsDropdown = document.getElementById('notificationsDropdown');
+                    const notificationCount = document.getElementById('notificationCount');
+                    notificationsDropdown.innerHTML = '<div class="notification-item">No tienes notificaciones.</div>';
+                    notificationCount.textContent = '0';
+                } else {
+                    console.error('Error al eliminar todas las notificaciones:', data.message);
+                }
+            })
+            .catch(error => console.error('Error de red al eliminar todas las notificaciones:', error));
+        }
     }
 
 /**
