@@ -193,7 +193,7 @@ function generateCalendarNavUrl($month, $year, $view, $day = null) {
                     $interval = new DateInterval('P1D');
                     $period = new DatePeriod($startOfWeek, $interval, $endOfWeek->modify('+1 day'));
                     foreach ($period as $day) {
-                        $dayData = ['date' => $day->format('Y-m-d'), 'day_name' => $monthNames[$day->format('n')] . ' ' . $day->format('j'), 'routines' => [], 'events' => []];
+                        $dayData = ['date' => $day->format('Y-m-d'), 'day' => $day->format('j'), 'day_name' => $day->format('l'), 'routines' => [], 'events' => []];
                         $dayOfWeek = strtolower($day->format('l'));
                         $dayInSpanish = ['monday' => 'lunes', 'tuesday' => 'martes', 'wednesday' => 'miercoles', 'thursday' => 'jueves', 'friday' => 'viernes', 'saturday' => 'sabado', 'sunday' => 'domingo'][$dayOfWeek];
                         foreach ($allRoutines as $routine) {
@@ -206,17 +206,29 @@ function generateCalendarNavUrl($month, $year, $view, $day = null) {
                         $weekDays[] = $dayData;
                     }
                     ?>
-                    <div class="calendar-week-grid">
+                    <div class="calendar-grid">
+                        <div class="calendar-day-header"><span class="day-full">Lunes</span><span class="day-abbr">L</span></div>
+                        <div class="calendar-day-header"><span class="day-full">Martes</span><span class="day-abbr">M</span></div>
+                        <div class="calendar-day-header"><span class="day-full">Miércoles</span><span class="day-abbr">X</span></div>
+                        <div class="calendar-day-header"><span class="day-full">Jueves</span><span class="day-abbr">J</span></div>
+                        <div class="calendar-day-header"><span class="day-full">Viernes</span><span class="day-abbr">V</span></div>
+                        <div class="calendar-day-header"><span class="day-full">Sábado</span><span class="day-abbr">S</span></div>
+                        <div class="calendar-day-header"><span class="day-full">Domingo</span><span class="day-abbr">D</span></div>
+
                         <?php foreach ($weekDays as $dayData): ?>
-                            <div class="calendar-day-week-view <?php echo (date('Y-m-d') == $dayData['date']) ? 'today' : ''; ?>" data-date="<?php echo $dayData['date']; ?>" data-events='<?php echo htmlspecialchars(json_encode(array_merge($dayData['routines'], $dayData['events'])), ENT_QUOTES, 'UTF-8'); ?>'>
-                                <span class="day-number"><?php echo $dayData['day_name']; ?></span>
+                            <div class="calendar-day <?php echo (date('Y-m-d') == $dayData['date']) ? 'today' : ''; ?>" 
+                                 data-date="<?php echo $dayData['date']; ?>"
+                                 data-events='<?php echo htmlspecialchars(json_encode(array_merge($dayData['routines'], $dayData['events'])), ENT_QUOTES, 'UTF-8'); ?>'>
+                                <span class="day-number"><?php echo $dayData['day']; ?></span>
                                 <div class="day-events">
+                                    <?php $colorIndex = 1; ?>
                                     <?php foreach ($dayData['routines'] as $routine): ?>
-                                        <div class="event-item routine-event">
+                                        <div class="event-item routine-event routine-bg-<?php echo $colorIndex; ?>">
                                             <span class="event-icon"><?php echo getActivityIcon($routine['tipo_actividad']); ?></span>
                                             <span class="event-time"><?php echo date('H:i', strtotime($routine['hora_programada'])); ?></span>
                                             <span class="event-title"><?php echo htmlspecialchars($routine['nombre_actividad']); ?> (<?php echo htmlspecialchars($routine['pet_name']); ?>)</span>
                                         </div>
+                                        <?php $colorIndex = ($colorIndex % 5) + 1; ?>
                                     <?php endforeach; ?>
                                     <?php foreach ($dayData['events'] as $event): ?>
                                         <div class="event-item calendar-event">

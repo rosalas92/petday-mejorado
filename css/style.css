@@ -1524,13 +1524,31 @@ html {
 }
 
 /* Calendarios y fechas */
-.calendar-grid {
+.calendar-grid, .calendar-week-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 1px;
     background: var(--gray-medium);
     border-radius: var(--radius-md);
     overflow: hidden;
+}
+
+.calendar-day-week-view {
+    background: var(--white);
+    padding: var(--spacing-sm);
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    transition: background-color 0.2s ease;
+}
+
+.calendar-day-week-view:hover {
+    background: var(--primary-light);
+}
+
+.calendar-day-week-view.today {
+    background: var(--secondary-light);
+    border: 2px solid var(--primary-color);
 }
 
 .calendar-day {
