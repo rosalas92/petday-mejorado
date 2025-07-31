@@ -128,6 +128,42 @@ $monthNames = [
     <title>Calendario - PetDay</title>
     <link rel="stylesheet" href="../../css/style.css?v=1.12">
     <link rel="icon" href="../../images/favicon.png" type="image/png">
+    <style>
+        @media (max-width: 768px) {
+            .calendar-page .page-header {
+                flex-direction: column;
+                align-items: center;
+                gap: var(--spacing-md);
+            }
+
+            .calendar-nav {
+                flex-wrap: wrap;
+                justify-content: center;
+                width: 100%;
+            }
+            
+            .calendar-nav h3 {
+                width: 100%;
+                text-align: center;
+                order: -1; /* Mueve el título del mes arriba de los botones */
+                margin-bottom: var(--spacing-sm);
+            }
+
+            .calendar-day .event-item {
+                justify-content: center;
+                text-align: center;
+                flex-wrap: wrap;
+                padding: var(--spacing-xs);
+            }
+            
+            .calendar-day .event-title {
+                white-space: normal;
+                text-align: center;
+                flex-grow: 1;
+                flex-basis: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
     <?php include_once __DIR__ . '/../includes/header.php'; ?>

@@ -1,0 +1,1 @@
+ALTER TABLE `rutinas` ADD `color` VARCHAR(7) DEFAULT '#3a87ad';
