@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 // Enviar notificación al usuario
                 $notificationTitle = "Nuevo Evento Creado";
-                $notificationMessage = "Se ha creado un nuevo evento para ${petName}: \"" . htmlspecialchars($eventData['titulo']) . "\" el " . htmlspecialchars(date('d/m/Y H:i', strtotime($eventData['fecha_evento']))) . ".";
+                $notificationMessage = "Se ha creado un nuevo evento para {$petName}: \"" . htmlspecialchars($eventData['titulo']) . "\" el " . htmlspecialchars(date('d/m/Y H:i', strtotime($eventData['fecha_evento']))) . ".";
                 sendNotification($userId, $notificationTitle, $notificationMessage, 'evento');
 
                 header('Location: ../pets/pet_profile.php?id=' . $eventData['id_mascota'] . '&status=event_success');
