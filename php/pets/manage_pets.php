@@ -102,3 +102,6 @@ $isLoggedIn = true;
     </main>
 
     <?php include_once __DIR__ . '/../includes/footer.php'; ?>
+    <script src="../../js/app.js?v=1.8"></script>
+</body>
+</html>
