@@ -5,6 +5,8 @@
 
 document.addEventListener('DOMContentLoaded', function() {
     console.log('app.js cargado y ejecutándose');
+    const url="../php/";
+
 
     //--------------------------------------------------
     // INICIALIZACIÓN PRINCIPAL
@@ -38,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Función para obtener y mostrar notificaciones
         function fetchNotifications() {
-            fetch('/petday/php/notifications/get_notifications.php')
+            fetch(url+'notifications/get_notifications.php')
                 .then(response => response.json())
                 .then(data => {
                     if (!data.success) {
@@ -80,7 +82,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Función para marcar una rutina como completada desde una notificación
         function markRoutineAsCompleteFromNotification(notificationId, routineId) {
-            fetch('/petday/php/notifications/mark_routine_complete.php', {
+            fetch(url+'notifications/mark_routine_complete.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ notification_id: notificationId, routine_id: routineId })
@@ -102,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function() {
         function deleteNotification(notificationId) {
             if (!confirm('¿Estás seguro de que quieres eliminar esta notificación?')) return;
 
-            fetch('/petday/php/notifications/delete_notification.php', {
+            fetch(url+'notifications/delete_notification.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: `notification_id=${notificationId}`
@@ -123,7 +125,7 @@ document.addEventListener('DOMContentLoaded', function() {
         function deleteAllNotifications() {
             if (!confirm('¿Estás seguro de que quieres eliminar todas las notificaciones?')) return;
 
-            fetch('/petday/php/notifications/delete_all_notifications.php', { method: 'POST' })
+            fetch(url+'notifications/delete_all_notifications.php', { method: 'POST' })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
@@ -139,7 +141,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Función para marcar todas las notificaciones como leídas
         function markAllNotificationsAsRead() {
-            fetch('/petday/php/notifications/mark_all_notifications_read.php', { method: 'POST' })
+            fetch(url+'notifications/mark_all_notifications_read.php', { method: 'POST' })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
@@ -157,7 +159,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Función para verificar y crear notificaciones de rutinas próximas
         function checkUpcomingRoutines() {
-            fetch('/petday/php/notifications/check_upcoming_routines.php')
+            fetch(url+'notifications/check_upcoming_routines.php')
                 .then(response => response.json())
                 .then(data => {
                     if (data.success && data.notifications_created > 0) {
@@ -372,7 +374,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (e.target.matches('.mark-complete-btn')) {
                 const routineId = e.target.dataset.routineId;
                 const routineItem = e.target.closest('.routine-item');
-                fetch('/petday/php/routines/mark_complete.php', {
+                fetch(url+'routines/mark_complete.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     body: `routine_id=${routineId}`
@@ -397,7 +399,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.routine-status-icon').forEach(iconElement => {
             const routineId = iconElement.dataset.routineId;
             if (!routineId) return;
-            fetch(`/petday/php/routines/get_routine_status.php?id=${routineId}`)
+            fetch(url+`routines/get_routine_status.php?id=${routineId}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.success && data.status) {
