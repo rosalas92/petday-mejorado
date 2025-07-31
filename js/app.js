@@ -257,7 +257,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const modalDayTitle = document.getElementById('modalDayTitle');
         const modalEventsList = document.getElementById('modalEventsList');
-        const clearModalButton = document.getElementById('clearModalButton');
+        const editDayButton = document.getElementById('editDayButton');
 
         document.querySelectorAll('.calendar-day').forEach(element => {
             element.addEventListener('click', function() {
@@ -271,14 +271,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     return;
                 }
 
-                const title = new Date(this.dataset.date + 'T00:00:00').toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                const date = this.dataset.date;
+                const title = new Date(date + 'T00:00:00').toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
                 modalDayTitle.textContent = title;
                 modalEventsList.innerHTML = '';
 
                 if (events.length === 0) {
                     modalEventsList.innerHTML = '<p class="no-events-msg">No hay actividades programadas.</p>';
-                    if(clearModalButton) clearModalButton.style.display = 'none';
+                    if(editDayButton) editDayButton.style.display = 'inline-block'; // Mostrar siempre el botón
                 } else {
                     events.forEach(event => {
                         const item = document.createElement('div');
@@ -300,16 +301,27 @@ document.addEventListener('DOMContentLoaded', function() {
                         `;
                         modalEventsList.appendChild(item);
                     });
-                    if(clearModalButton) clearModalButton.style.display = 'inline-block';
+                    if(editDayButton) editDayButton.style.display = 'inline-block';
                 }
+                
+                if(editDayButton) {
+                    editDayButton.dataset.date = date; // Guardar la fecha en el botón
+                }
+
                 dayDetailsModal.classList.add('open');
             });
         });
 
-        if (clearModalButton) {
-            clearModalButton.addEventListener('click', () => {
-                modalEventsList.innerHTML = '<p class="no-events-msg">No hay actividades programadas.</p>';
-                clearModalButton.style.display = 'none';
+        if (editDayButton) {
+            editDayButton.addEventListener('click', (e) => {
+                const date = e.currentTarget.dataset.date;
+                if (date) {
+                    // Redirigir a la página de calendario con la fecha seleccionada
+                    // Aquí puedes decidir a qué página específica quieres redirigir.
+                    // Por ejemplo, a una nueva página `edit_day.php?date=${date}`
+                    // o a la misma página de calendario para que desde allí se gestione.
+                    window.location.href = `/petday/php/calendar/calendar.php?date=${date}`;
+                }
             });
         }
     }
@@ -383,7 +395,12 @@ document.addEventListener('DOMContentLoaded', function() {
             selector.value = params.get('view') || 'month';
             selector.addEventListener('change', function() {
                 const petId = params.get('id');
-                window.location.href = `pet_profile.php?id=${petId}&view=${this.value}`;
+                // Comprobar en qué página estamos para construir la URL correcta
+                if (window.location.pathname.includes('pet_profile.php')) {
+                    window.location.href = `pet_profile.php?id=${petId}&view=${this.value}`;
+                } else {
+                    window.location.href = `calendar.php?view=${this.value}`;
+                }
             });
         }
     }
