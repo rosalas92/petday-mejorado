@@ -259,11 +259,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const modalEventsList = document.getElementById('modalEventsList');
         const editDayButton = document.getElementById('editDayButton');
 
+        let currentEvents = []; // Variable para mantener los eventos del día seleccionado
+
         document.querySelectorAll('.calendar-day').forEach(element => {
             element.addEventListener('click', function() {
-                let events = [];
                 try {
-                    events = JSON.parse(this.dataset.events || '[]');
+                    currentEvents = JSON.parse(this.dataset.events || '[]');
                 } catch (e) {
                     console.error("Error al parsear los datos de eventos:", e);
                     modalEventsList.innerHTML = '<p class="no-events-msg">Error al cargar los datos de este día.</p>';
@@ -277,11 +278,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 modalDayTitle.textContent = title;
                 modalEventsList.innerHTML = '';
 
-                if (events.length === 0) {
+                if (currentEvents.length === 0) {
                     modalEventsList.innerHTML = '<p class="no-events-msg">No hay actividades programadas.</p>';
-                    if(editDayButton) editDayButton.style.display = 'inline-block'; // Mostrar siempre el botón
                 } else {
-                    events.forEach(event => {
+                    currentEvents.forEach(event => {
                         const item = document.createElement('div');
                         item.className = 'event-item ' + (event.tipo_actividad ? 'routine-event' : 'calendar-event');
                         
@@ -301,11 +301,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         `;
                         modalEventsList.appendChild(item);
                     });
-                    if(editDayButton) editDayButton.style.display = 'inline-block';
                 }
                 
                 if(editDayButton) {
-                    editDayButton.dataset.date = date; // Guardar la fecha en el botón
+                    editDayButton.style.display = 'inline-block';
                 }
 
                 dayDetailsModal.classList.add('open');
@@ -313,14 +312,25 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         if (editDayButton) {
-            editDayButton.addEventListener('click', (e) => {
-                const date = e.currentTarget.dataset.date;
-                if (date) {
-                    // Redirigir a la página de calendario con la fecha seleccionada
-                    // Aquí puedes decidir a qué página específica quieres redirigir.
-                    // Por ejemplo, a una nueva página `edit_day.php?date=${date}`
-                    // o a la misma página de calendario para que desde allí se gestione.
-                    window.location.href = `/petday/php/calendar/calendar.php?date=${date}`;
+            editDayButton.addEventListener('click', () => {
+                const petsWithEvents = [...new Map(currentEvents.map(e => [e.pet_id, e])).values()];
+
+                if (petsWithEvents.length === 1) {
+                    window.location.href = `/petday/php/pets/pet_profile.php?id=${petsWithEvents[0].pet_id}`;
+                } else {
+                    modalDayTitle.textContent = 'Editar Rutinas';
+                    modalEventsList.innerHTML = '<p>Selecciona una mascota para editar sus rutinas:</p>';
+                    const petList = document.createElement('div');
+                    petList.className = 'pet-selection-list';
+                    petsWithEvents.forEach(pet => {
+                        const petLink = document.createElement('a');
+                        petLink.href = `/petday/php/pets/pet_profile.php?id=${pet.pet_id}`;
+                        petLink.className = 'btn btn-outline';
+                        petLink.textContent = pet.pet_name;
+                        petList.appendChild(petLink);
+                    });
+                    modalEventsList.appendChild(petList);
+                    editDayButton.style.display = 'none';
                 }
             });
         }
