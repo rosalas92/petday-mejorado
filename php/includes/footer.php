@@ -20,7 +20,7 @@
                 <div class="footer-section">
                     <h4>Soporte</h4>
                     <ul>
-                        <li><a href="<?php echo URL_ADMIN; ?>/docs/user_manual.html">Manual de Usuario</a></li>
+                        <li><a href="<?php echo URL_ADMIN; ?>/manual-de-usuario.pdf" target="_blank">Manual de Usuario</a></li>
                         <li><a href="<?php echo URL_ADMIN; ?>/index.php#contact">Contacto</a></li>
                     </ul>
                 </div>
