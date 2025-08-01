@@ -5,8 +5,7 @@
 
 document.addEventListener('DOMContentLoaded', function() {
     console.log('app.js cargado y ejecutándose');
-    const url="../php/";
-
+    const url = "../";
 
     //--------------------------------------------------
     // INICIALIZACIÓN PRINCIPAL
@@ -328,7 +327,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const petsWithEvents = [...new Map(currentEvents.map(e => [e.pet_id, e])).values()];
 
                     if (petsWithEvents.length === 1) {
-                        window.location.href = `/petday/php/pets/pet_profile.php?id=${petsWithEvents[0].pet_id}`;
+                        window.location.href = url+`pets/pet_profile.php?id=${petsWithEvents[0].pet_id}`;
                     } else {
                         modalDayTitle.textContent = 'Editar Rutinas';
                         modalEventsList.innerHTML = '<p>Selecciona una mascota para editar sus rutinas:</p>';
@@ -336,7 +335,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         petList.className = 'pet-selection-list';
                         petsWithEvents.forEach(pet => {
                             const petLink = document.createElement('a');
-                            petLink.href = `/petday/php/pets/pet_profile.php?id=${pet.pet_id}`;
+                            petLink.href = url+`pets/pet_profile.php?id=${pet.pet_id}`;
                             petLink.className = 'btn btn-outline';
                             petLink.textContent = pet.pet_name;
                             petList.appendChild(petLink);
