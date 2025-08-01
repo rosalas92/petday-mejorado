@@ -5,7 +5,7 @@
 
 document.addEventListener('DOMContentLoaded', function() {
     console.log('app.js cargado y ejecutándose');
-    const url = "../";
+    const url = "php/";
 
     //--------------------------------------------------
     // INICIALIZACIÓN PRINCIPAL
